@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - 'main'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get next version
+        id: get_next_version
+        uses: thenativeweb/get-next-version@2.5.0
+
+      - name: Setup Go
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20.x
+
+      - name: Setup Git user
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          git config user.name github-actions 
+          git config user.email github-actions@github.com
+
+      - name: Create new tag
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
+          
+          git tag $NEXT_VERSION
+          git push origin $NEXT_VERSION
+
+      - name: Build for platforms
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        env:
+          PLATFORMS: build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build-windows-amd64
+        run: |
+          for platform in ${{ env.PLATFORMS }}
+          do
+            echo $platform
+            make $platform
+          done
+
+      - name: Release binaries
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.get_next_version.outputs.version }}
+          artifacts: "build/*"
