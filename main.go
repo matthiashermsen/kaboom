@@ -45,7 +45,7 @@ func main() {
 		logErrorAndExit(err, logger)
 	}
 
-	apiRouter := api.GetApi(appversion.AppVersion)
+	apiRouter := api.GetApi(appversion.AppVersion, logger)
 
 	logger.Info().Msg(fmt.Sprintf("Starting server on port %v", serverConfiguration.Port))
 

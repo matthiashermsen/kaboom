@@ -7,3 +7,6 @@
 
 # Build
 build/
+
+# Coverage
+coverage/
