@@ -11,36 +11,38 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWriteJsonResponse_Success(testing *testing.T) {
-	responseWriter := httptest.NewRecorder()
-	responseBody := NewSuccessApiResponse("made-up")
+func TestWriteJsonResponse(suite *testing.T) {
+	suite.Run("Success", func(testing *testing.T) {
+		responseWriter := httptest.NewRecorder()
+		responseBody := NewSuccessApiResponse("made-up")
 
-	err := WriteJsonResponse(responseWriter, responseBody)
+		err := WriteJsonResponse(responseWriter, responseBody)
 
-	assert.Nil(testing, err, fmt.Sprintf("Expected error to be nil but got '%v'", err))
+		assert.Nil(testing, err, fmt.Sprintf("Expected error to be nil but got '%v'", err))
 
-	expectedResponseBody := `{"status":"success","data":"made-up","error":{"code":"","message":""}}`
-	actualResponseBodyAsString := responseWriter.Body.String()
+		expectedResponseBody := `{"status":"success","data":"made-up","error":{"code":"","message":""}}`
+		actualResponseBodyAsString := responseWriter.Body.String()
 
-	assert.Equal(testing, expectedResponseBody, actualResponseBodyAsString, fmt.Sprintf("Expected response body '%s', but got '%s'", expectedResponseBody, actualResponseBodyAsString))
-}
+		assert.Equal(testing, expectedResponseBody, actualResponseBodyAsString, fmt.Sprintf("Expected response body '%s', but got '%s'", expectedResponseBody, actualResponseBodyAsString))
+	})
 
-func TestWriteJsonResponse_MarshalingFailed(testing *testing.T) {
-	responseWriter := httptest.NewRecorder()
-	responseBody := NewSuccessApiResponse(make(chan int))
+	suite.Run("Marshalling failed", func(testing *testing.T) {
+		responseWriter := httptest.NewRecorder()
+		responseBody := NewSuccessApiResponse(make(chan int))
 
-	err := WriteJsonResponse(responseWriter, responseBody)
+		err := WriteJsonResponse(responseWriter, responseBody)
 
-	assert.NotNil(testing, err, "Expected error not to be nil")
-}
+		assert.NotNil(testing, err, "Expected error not to be nil")
+	})
 
-func TestWriteJsonResponse_WriteFailed(testing *testing.T) {
-	responseWriter := errorMockResponseWriter{}
-	responseBody := NewSuccessApiResponse("made-up")
+	suite.Run("Write failed", func(testing *testing.T) {
+		responseWriter := errorMockResponseWriter{}
+		responseBody := NewSuccessApiResponse("made-up")
 
-	err := WriteJsonResponse(&responseWriter, responseBody)
+		err := WriteJsonResponse(&responseWriter, responseBody)
 
-	assert.NotNil(testing, err, "Expected error not to be nil")
+		assert.NotNil(testing, err, "Expected error not to be nil")
+	})
 }
 
 type errorMockResponseWriter struct {

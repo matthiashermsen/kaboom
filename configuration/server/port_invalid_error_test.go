@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPortInvalidError_Error(testing *testing.T) {
+func TestPortInvalidError(testing *testing.T) {
 	portInvalidError := PortInvalidError{}
 
 	expectedErrorMessage := fmt.Sprintf("Invalid port. Port number should be between %d and %d (inclusive).", minimumPort, maximumPort)

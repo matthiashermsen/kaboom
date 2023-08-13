@@ -10,7 +10,7 @@ import (
 	"github.com/matthiashermsen/kaboom/configuration/logging"
 )
 
-func TestGetLogger_LogLevels(testingSuite *testing.T) {
+func TestGetLogger(suite *testing.T) {
 	logLevels := []zerolog.Level{
 		zerolog.PanicLevel,
 		zerolog.FatalLevel,
@@ -22,7 +22,7 @@ func TestGetLogger_LogLevels(testingSuite *testing.T) {
 	}
 
 	for _, expectedLogLevel := range logLevels {
-		testingSuite.Run(fmt.Sprintf("Log level=%s", expectedLogLevel), func(testing *testing.T) {
+		suite.Run(fmt.Sprintf("Log level=%s", expectedLogLevel), func(testing *testing.T) {
 			configuration := logging.Configuration{
 				Level: expectedLogLevel,
 			}
