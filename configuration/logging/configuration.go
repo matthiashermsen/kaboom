@@ -1,7 +1,7 @@
 package logging
 
-import "github.com/rs/zerolog"
+import "log/slog"
 
 type Configuration struct {
-	Level zerolog.Level `mapstructure:"LOGGING_LEVEL"`
+	Level slog.Level `mapstructure:"LOGGING_LEVEL"`
 }

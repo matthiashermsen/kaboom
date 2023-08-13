@@ -36,9 +36,8 @@ func TestNewErrorApiResponse(testing *testing.T) {
 	assert.Equal(testing, "error", apiResponse.Status, fmt.Sprintf("Expected status to be 'error' but got '%s'", apiResponse.Status))
 	assert.Nil(testing, apiResponse.Data, "Expected data to be nil")
 
-	expectedErrorCode := "INTERNAL_ERROR"
 	expectedErrorMessage := "The server encountered an unexpected condition that prevented it from fulfilling the request."
 
-	assert.Equal(testing, expectedErrorCode, apiResponse.Error.Code, fmt.Sprintf("Expected error code to be '%s' but got '%s'", expectedErrorCode, apiResponse.Error.Code))
+	assert.Equal(testing, InternalError, apiResponse.Error.Code, fmt.Sprintf("Expected error code to be '%s' but got '%s'", InternalError, apiResponse.Error.Code))
 	assert.Equal(testing, expectedErrorMessage, apiResponse.Error.Message, fmt.Sprintf("Expected error message to be '%s' but got '%s'", expectedErrorMessage, apiResponse.Error.Message))
 }

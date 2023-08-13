@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
-
-	"github.com/rs/zerolog"
 
 	"github.com/matthiashermsen/kaboom/api"
 	"github.com/matthiashermsen/kaboom/appversion"
@@ -47,7 +46,7 @@ func main() {
 
 	apiRouter := api.GetApi(appversion.AppVersion, logger)
 
-	logger.Info().Msg(fmt.Sprintf("Starting server on port %v", serverConfiguration.Port))
+	logger.Info(fmt.Sprintf("Starting server on port %v", serverConfiguration.Port))
 
 	err = http.ListenAndServe(":"+strconv.Itoa(int(serverConfiguration.Port)), apiRouter)
 
@@ -56,8 +55,8 @@ func main() {
 	}
 }
 
-func logErrorAndExit(err error, logger zerolog.Logger) {
-	logger.Error().Err(err).Msg("")
+func logErrorAndExit(err error, logger *slog.Logger) {
+	logger.Error("", err)
 
 	os.Exit(1)
 }

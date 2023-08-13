@@ -2,11 +2,11 @@ package logging
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strconv"
 	"testing"
 
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/matthiashermsen/kaboom/configuration"
@@ -22,7 +22,7 @@ func TestGetConfiguration(suite *testing.T) {
 
 		assert.NoError(testing, err, "Expected no error when getting default configuration")
 
-		assert.Equal(testing, zerolog.InfoLevel, config.Level, fmt.Sprintf("Expected log level to be %s", zerolog.InfoLevel))
+		assert.Equal(testing, slog.LevelInfo, config.Level, fmt.Sprintf("Expected log level to be %s", slog.LevelInfo))
 	})
 
 	suite.Run("Custom log level", func(testing *testing.T) {
@@ -30,7 +30,7 @@ func TestGetConfiguration(suite *testing.T) {
 
 		configuration.InitializeConfigurationEnvironment()
 
-		expectedLogLevel := zerolog.TraceLevel
+		expectedLogLevel := slog.LevelDebug
 
 		err := os.Setenv(configuration.EnvPrefix+"_LOGGING_LEVEL", strconv.Itoa(int(expectedLogLevel)))
 
@@ -48,7 +48,7 @@ func TestGetConfiguration(suite *testing.T) {
 
 		configuration.InitializeConfigurationEnvironment()
 
-		expectedLogLevel := 42
+		expectedLogLevel := 999
 
 		err := os.Setenv(configuration.EnvPrefix+"_LOGGING_LEVEL", strconv.Itoa(expectedLogLevel))
 
@@ -58,6 +58,6 @@ func TestGetConfiguration(suite *testing.T) {
 
 		assert.NoError(testing, err, "Expected no error when getting configuration")
 
-		assert.Equal(testing, zerolog.Level(expectedLogLevel), loggingConfiguration.Level, fmt.Sprintf("Expected log level to be %d but got %d", expectedLogLevel, loggingConfiguration.Level))
+		assert.Equal(testing, slog.Level(expectedLogLevel), loggingConfiguration.Level, fmt.Sprintf("Expected log level to be %d but got %d", expectedLogLevel, loggingConfiguration.Level))
 	})
 }

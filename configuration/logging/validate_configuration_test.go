@@ -2,55 +2,50 @@ package logging
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestValidateConfiguration(suite *testing.T) {
-	suite.Run("No error", func(testing *testing.T) {
-		configuration := Configuration{Level: zerolog.WarnLevel}
-
-		err := ValidateConfiguration(configuration)
-
-		assert.NoError(testing, err, "Expected no validation error")
-	})
-
-	suite.Run("Log level too low", func(suite *testing.T) {
-		invalidLogLevels := []zerolog.Level{
-			zerolog.Level(-2),
-			zerolog.Level(-5),
-			zerolog.Level(-10),
+	suite.Run("No error", func(suite *testing.T) {
+		logLevels := []slog.Level{
+			slog.LevelDebug,
+			slog.LevelInfo,
+			slog.LevelWarn,
+			slog.LevelError,
 		}
 
-		for _, currentLogLevel := range invalidLogLevels {
-			suite.Run(fmt.Sprintf("Log level=%s", currentLogLevel), func(testing *testing.T) {
-				configuration := Configuration{Level: currentLogLevel}
+		for _, logLevel := range logLevels {
+			suite.Run(fmt.Sprintf("Log level=%s", logLevel), func(testing *testing.T) {
+				configuration := Configuration{Level: logLevel}
 
 				err := ValidateConfiguration(configuration)
 
-				assert.Error(testing, err, "Expected validation error")
-				assert.IsType(testing, LogLevelTooLowError{}, err, "Expected LogLevelTooLowError")
+				assert.NoError(testing, err, "Expected no validation error")
 			})
 		}
 	})
 
-	suite.Run("Log level too high", func(suite *testing.T) {
-		invalidLogLevels := []zerolog.Level{
-			zerolog.Level(6),
-			zerolog.Level(10),
-			zerolog.Level(100),
+	suite.Run("LogLevelInvalidError", func(suite *testing.T) {
+		logLevels := []int{
+			-10,
+			-5,
+			5,
+			10,
+			1,
+			-1,
 		}
 
-		for _, currentLogLevel := range invalidLogLevels {
-			suite.Run(fmt.Sprintf("Log level=%s", currentLogLevel), func(testing *testing.T) {
-				configuration := Configuration{Level: currentLogLevel}
+		for _, logLevel := range logLevels {
+			suite.Run(fmt.Sprintf("Log level=%d", logLevel), func(testing *testing.T) {
+				configuration := Configuration{Level: slog.Level(logLevel)}
 
 				err := ValidateConfiguration(configuration)
 
 				assert.Error(testing, err, "Expected validation error")
-				assert.IsType(testing, LogLevelTooHighError{}, err, "Expected LogLevelTooHighError")
+				assert.IsType(testing, LogLevelInvalidError{}, err, "Expected LogLevelInvalidError")
 			})
 		}
 	})

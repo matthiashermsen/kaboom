@@ -1,12 +1,13 @@
 package logging
 
 import (
-	"github.com/rs/zerolog"
+	"log/slog"
+
 	"github.com/spf13/viper"
 )
 
 func GetConfiguration() (Configuration, error) {
-	viper.SetDefault("LOGGING_LEVEL", zerolog.InfoLevel)
+	viper.SetDefault("LOGGING_LEVEL", slog.LevelInfo)
 
 	var configuration Configuration
 
