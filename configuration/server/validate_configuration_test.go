@@ -6,19 +6,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateConfiguration_NoError(testing *testing.T) {
-	configuration := Configuration{Port: 3000}
+func TestValidateConfiguration(suite *testing.T) {
+	suite.Run("No error", func(testing *testing.T) {
+		configuration := Configuration{Port: 3000}
 
-	err := ValidateConfiguration(configuration)
+		err := ValidateConfiguration(configuration)
 
-	assert.NoError(testing, err, "Expected no validation error")
-}
+		assert.NoError(testing, err, "Expected no validation error")
+	})
 
-func TestValidateConfiguration_InvalidPort(testing *testing.T) {
-	configuration := Configuration{Port: 0}
+	suite.Run("Invalid port", func(testing *testing.T) {
+		configuration := Configuration{Port: 0}
 
-	err := ValidateConfiguration(configuration)
+		err := ValidateConfiguration(configuration)
 
-	assert.Error(testing, err, "Expected validation error")
-	assert.IsType(testing, PortInvalidError{}, err, "Expected PortInvalidError")
+		assert.Error(testing, err, "Expected validation error")
+		assert.IsType(testing, PortInvalidError{}, err, "Expected PortInvalidError")
+	})
 }

@@ -11,50 +11,52 @@ import (
 	"github.com/matthiashermsen/kaboom/configuration"
 )
 
-func TestGetConfiguration_DefaultPort(testing *testing.T) {
-	defer os.Clearenv()
+func TestGetConfiguration(suite *testing.T) {
+	suite.Run("Default port", func(testing *testing.T) {
+		defer os.Clearenv()
 
-	configuration.InitializeConfigurationEnvironment()
+		configuration.InitializeConfigurationEnvironment()
 
-	config, err := GetConfiguration()
+		config, err := GetConfiguration()
 
-	assert.NoError(testing, err, "Expected no error when getting default configuration")
+		assert.NoError(testing, err, "Expected no error when getting default configuration")
 
-	var expectedPort uint16 = 3000
+		var expectedPort uint16 = 3000
 
-	assert.Equal(testing, expectedPort, config.Port, fmt.Sprintf("Expected port to be %v", expectedPort))
-}
+		assert.Equal(testing, expectedPort, config.Port, fmt.Sprintf("Expected port to be %v", expectedPort))
+	})
 
-func TestGetConfiguration_CustomPort(testing *testing.T) {
-	defer os.Clearenv()
+	suite.Run("Custom port", func(testing *testing.T) {
+		defer os.Clearenv()
 
-	configuration.InitializeConfigurationEnvironment()
+		configuration.InitializeConfigurationEnvironment()
 
-	var expectedPort uint16 = 8080
+		var expectedPort uint16 = 8080
 
-	err := os.Setenv(configuration.EnvPrefix+"_SERVER_PORT", strconv.Itoa(int(expectedPort)))
+		err := os.Setenv(configuration.EnvPrefix+"_SERVER_PORT", strconv.Itoa(int(expectedPort)))
 
-	assert.NoError(testing, err, "Expected no error when setting environment variable")
+		assert.NoError(testing, err, "Expected no error when setting environment variable")
 
-	config, err := GetConfiguration()
+		config, err := GetConfiguration()
 
-	assert.NoError(testing, err, "Expected no error when getting configuration")
+		assert.NoError(testing, err, "Expected no error when getting configuration")
 
-	assert.Equal(testing, expectedPort, config.Port, fmt.Sprintf("Expected port to be %d but got %d", expectedPort, config.Port))
-}
+		assert.Equal(testing, expectedPort, config.Port, fmt.Sprintf("Expected port to be %d but got %d", expectedPort, config.Port))
+	})
 
-func TestGetConfiguration_InvalidPort(testing *testing.T) {
-	defer os.Clearenv()
+	suite.Run("Invalid port", func(testing *testing.T) {
+		defer os.Clearenv()
 
-	configuration.InitializeConfigurationEnvironment()
+		configuration.InitializeConfigurationEnvironment()
 
-	expectedPort := "made-up"
+		expectedPort := "made-up"
 
-	err := os.Setenv(configuration.EnvPrefix+"_SERVER_PORT", expectedPort)
+		err := os.Setenv(configuration.EnvPrefix+"_SERVER_PORT", expectedPort)
 
-	assert.NoError(testing, err, "Expected no error when setting environment variable")
+		assert.NoError(testing, err, "Expected no error when setting environment variable")
 
-	_, err = GetConfiguration()
+		_, err = GetConfiguration()
 
-	assert.Error(testing, err, "Expected error when getting configuration")
+		assert.Error(testing, err, "Expected error when getting configuration")
+	})
 }
