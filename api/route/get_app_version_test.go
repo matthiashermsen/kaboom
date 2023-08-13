@@ -2,18 +2,18 @@ package route
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetAppVersion(suite *testing.T) {
 	suite.Run("App version is available", func(testing *testing.T) {
 		appVersion := "1.0.0"
-		logger := zerolog.Nop()
+		logger := slog.New(slog.Default().Handler())
 
 		request, err := http.NewRequest("GET", "/", nil)
 
@@ -39,7 +39,7 @@ func TestGetAppVersion(suite *testing.T) {
 
 	suite.Run("App version is unavailable", func(testing *testing.T) {
 		appVersion := ""
-		logger := zerolog.Nop()
+		logger := slog.New(slog.Default().Handler())
 
 		request, err := http.NewRequest("GET", "/", nil)
 

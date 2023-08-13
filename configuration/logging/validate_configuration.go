@@ -1,15 +1,20 @@
 package logging
 
-import "github.com/rs/zerolog"
+import "log/slog"
 
 func ValidateConfiguration(configuration Configuration) error {
-	if configuration.Level < zerolog.TraceLevel {
-		return LogLevelTooLowError{}
+	logLevels := []slog.Level{
+		slog.LevelDebug,
+		slog.LevelInfo,
+		slog.LevelWarn,
+		slog.LevelError,
 	}
 
-	if configuration.Level > zerolog.PanicLevel {
-		return LogLevelTooHighError{}
+	for _, logLevel := range logLevels {
+		if configuration.Level == logLevel {
+			return nil
+		}
 	}
 
-	return nil
+	return LogLevelInvalidError{}
 }

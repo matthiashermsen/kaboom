@@ -35,7 +35,7 @@ func NewErrorApiResponse() ApiResponse[interface{}] {
 		Status: "error",
 		Data:   nil,
 		Error: ApiResponseError{
-			Code:    "INTERNAL_ERROR",
+			Code:    InternalError,
 			Message: "The server encountered an unexpected condition that prevented it from fulfilling the request.",
 		},
 	}
