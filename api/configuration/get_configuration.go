@@ -1,13 +1,9 @@
-package logging
+package configuration
 
-import (
-	"log/slog"
-
-	"github.com/spf13/viper"
-)
+import "github.com/spf13/viper"
 
 func GetConfiguration() (Configuration, error) {
-	viper.SetDefault("LOGGING_LEVEL", slog.LevelInfo)
+	viper.SetDefault("SERVER_PORT", 3000)
 
 	var configuration Configuration
 

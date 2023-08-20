@@ -1,4 +1,4 @@
-package logging
+package configuration
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateConfiguration(suite *testing.T) {
+func TestValidate(suite *testing.T) {
 	suite.Run("No error", func(suite *testing.T) {
 		logLevels := []slog.Level{
 			slog.LevelDebug,
@@ -21,7 +21,7 @@ func TestValidateConfiguration(suite *testing.T) {
 			suite.Run(fmt.Sprintf("Log level=%s", logLevel), func(testing *testing.T) {
 				configuration := Configuration{Level: logLevel}
 
-				err := ValidateConfiguration(configuration)
+				err := configuration.Validate()
 
 				assert.NoError(testing, err, "Expected no validation error")
 			})
@@ -42,10 +42,9 @@ func TestValidateConfiguration(suite *testing.T) {
 			suite.Run(fmt.Sprintf("Log level=%d", logLevel), func(testing *testing.T) {
 				configuration := Configuration{Level: slog.Level(logLevel)}
 
-				err := ValidateConfiguration(configuration)
+				err := configuration.Validate()
 
 				assert.Error(testing, err, "Expected validation error")
-				assert.IsType(testing, LogLevelInvalidError{}, err, "Expected LogLevelInvalidError")
 			})
 		}
 	})

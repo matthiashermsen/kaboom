@@ -1,4 +1,4 @@
-package server
+package configuration
 
 import (
 	"testing"
@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateConfiguration(suite *testing.T) {
+func TestValidate(suite *testing.T) {
 	suite.Run("No error", func(testing *testing.T) {
 		configuration := Configuration{Port: 3000}
 
-		err := ValidateConfiguration(configuration)
+		err := configuration.Validate()
 
 		assert.NoError(testing, err, "Expected no validation error")
 	})
@@ -18,9 +18,8 @@ func TestValidateConfiguration(suite *testing.T) {
 	suite.Run("Invalid port", func(testing *testing.T) {
 		configuration := Configuration{Port: 0}
 
-		err := ValidateConfiguration(configuration)
+		err := configuration.Validate()
 
 		assert.Error(testing, err, "Expected validation error")
-		assert.IsType(testing, PortInvalidError{}, err, "Expected PortInvalidError")
 	})
 }

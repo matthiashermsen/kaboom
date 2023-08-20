@@ -8,23 +8,23 @@ import (
 	"strconv"
 
 	"github.com/matthiashermsen/kaboom/api"
+	apiConfiguration "github.com/matthiashermsen/kaboom/api/configuration"
 	"github.com/matthiashermsen/kaboom/appversion"
 	"github.com/matthiashermsen/kaboom/configuration"
-	loggingConfig "github.com/matthiashermsen/kaboom/configuration/logging"
-	"github.com/matthiashermsen/kaboom/configuration/server"
 	"github.com/matthiashermsen/kaboom/logging"
+	loggingConfiguration "github.com/matthiashermsen/kaboom/logging/configuration"
 )
 
 func main() {
 	configuration.InitializeConfigurationEnvironment()
 
-	loggingConfiguration, err := loggingConfig.GetConfiguration()
+	loggingConfiguration, err := loggingConfiguration.GetConfiguration()
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = loggingConfig.ValidateConfiguration(loggingConfiguration)
+	err = loggingConfiguration.Validate()
 
 	if err != nil {
 		panic(err)
@@ -32,13 +32,13 @@ func main() {
 
 	logger := logging.GetLogger(loggingConfiguration)
 
-	serverConfiguration, err := server.GetConfiguration()
+	apiConfiguration, err := apiConfiguration.GetConfiguration()
 
 	if err != nil {
 		logErrorAndExit(err, logger)
 	}
 
-	err = server.ValidateConfiguration(serverConfiguration)
+	err = apiConfiguration.Validate()
 
 	if err != nil {
 		logErrorAndExit(err, logger)
@@ -46,9 +46,9 @@ func main() {
 
 	apiRouter := api.GetApi(appversion.AppVersion, logger)
 
-	logger.Info(fmt.Sprintf("Starting server on port %v", serverConfiguration.Port))
+	logger.Info(fmt.Sprintf("Starting server on port %v", apiConfiguration.Port))
 
-	err = http.ListenAndServe(":"+strconv.Itoa(int(serverConfiguration.Port)), apiRouter)
+	err = http.ListenAndServe(":"+strconv.Itoa(int(apiConfiguration.Port)), apiRouter)
 
 	if err != nil {
 		logErrorAndExit(err, logger)
