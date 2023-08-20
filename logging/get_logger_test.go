@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/matthiashermsen/kaboom/configuration/logging"
+	"github.com/matthiashermsen/kaboom/logging/configuration"
 )
 
 func TestGetLogger(suite *testing.T) {
@@ -20,7 +20,7 @@ func TestGetLogger(suite *testing.T) {
 
 	for _, expectedLogLevel := range logLevels {
 		suite.Run(fmt.Sprintf("Log level=%s", expectedLogLevel), func(testing *testing.T) {
-			configuration := logging.Configuration{
+			configuration := configuration.Configuration{
 				Level: expectedLogLevel,
 			}
 
