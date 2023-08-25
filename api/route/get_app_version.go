@@ -9,8 +9,6 @@ import (
 
 func GetAppVersion(appVersion string, logger *slog.Logger) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, request *http.Request) {
-		response.SetHeaderContentTypeToJson(responseWriter)
-
 		if appVersion == "" {
 			apiResponse := response.NewFailureApiResponse(response.AppVersionUnavailable, "The app version is unavailable.")
 			err := response.WriteJsonResponse(responseWriter, apiResponse)
