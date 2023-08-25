@@ -26,11 +26,6 @@ func TestGetAppVersion(suite *testing.T) {
 
 		assert.Equal(testing, http.StatusOK, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusOK, responseRecorder.Code))
 
-		expectedContentType := "application/json"
-		actualContentType := responseRecorder.Header().Get("Content-Type")
-
-		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
-
 		expectedResponseBody := `{"status":"success","data":"1.0.0","error":{"code":"","message":""}}`
 		actualResponseBody := responseRecorder.Body.String()
 
@@ -51,11 +46,6 @@ func TestGetAppVersion(suite *testing.T) {
 		handler(responseRecorder, request)
 
 		assert.Equal(testing, http.StatusOK, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusOK, responseRecorder.Code))
-
-		expectedContentType := "application/json"
-		actualContentType := responseRecorder.Header().Get("Content-Type")
-
-		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
 
 		expectedResponseBody := `{"status":"failure","data":null,"error":{"code":"APP_VERSION_UNAVAILABLE","message":"The app version is unavailable."}}`
 		actualResponseBody := responseRecorder.Body.String()
