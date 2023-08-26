@@ -53,3 +53,21 @@ func TestGetAppVersion(suite *testing.T) {
 		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
 	})
 }
+
+func TestRespondWithNotFound(suite *testing.T) {
+	suite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
+		router := GetApi("made-up", slog.New(slog.Default().Handler()))
+		request, err := http.NewRequest("GET", "/made-up", nil)
+
+		assert.NoError(testing, err, "Expected no error when constructing request")
+
+		responseRecorder := httptest.NewRecorder()
+
+		router.ServeHTTP(responseRecorder, request)
+
+		expectedContentType := "application/json"
+		actualContentType := responseRecorder.Header().Get("Content-Type")
+
+		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+	})
+}

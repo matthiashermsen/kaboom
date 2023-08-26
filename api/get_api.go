@@ -17,5 +17,7 @@ func GetApi(appVersion string, logger *slog.Logger) *chi.Mux {
 	apiRouter.Get("/ping", route.GetPing(logger))
 	apiRouter.Get("/app-version", route.GetAppVersion(appVersion, logger))
 
+	apiRouter.NotFound(route.RespondWithNotFound(logger))
+
 	return apiRouter
 }
