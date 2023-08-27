@@ -7,10 +7,13 @@ COMMON_FLAGS=-ldflags="-X '$(MODULE_PATH)/appversion.AppVersion=$(APP_VERSION)'"
 
 BUILD_DIR=./build
 
-.PHONY: analyze test coverage build build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build-windows-amd64
+.PHONY: analyze tidy test coverage build build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build-windows-amd64
 
 analyze:
 	@go vet ./...
+
+tidy:
+	@go mod tidy -v
 
 test:
 	@go test -cover ./...
