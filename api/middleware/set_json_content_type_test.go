@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSetJSONContentType(testing *testing.T) {
+func TestSetJsonContentType(testing *testing.T) {
 	handler := http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
 		responseWriter.WriteHeader(http.StatusOK)
 	})
 
-	middlewareHandler := SetJSONContentType(handler)
+	middlewareHandler := SetJsonContentType(handler)
 
 	request := httptest.NewRequest("GET", "/", nil)
 	responseWriter := httptest.NewRecorder()
