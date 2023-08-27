@@ -13,14 +13,7 @@ func GetPing(logger *slog.Logger) http.HandlerFunc {
 		err := response.WriteJsonResponse(responseWriter, apiResponse)
 
 		if err != nil {
-			logger.Error("Unable to write success response", err)
-
-			apiResponse := response.NewErrorApiResponse()
-			err = response.WriteJsonResponse(responseWriter, apiResponse)
-
-			if err != nil {
-				logger.Error("Unable to write error response", err)
-			}
+			response.HandleJsonResponseWriteError(responseWriter, err, logger)
 		}
 	}
 }
