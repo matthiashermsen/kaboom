@@ -1,15 +1,18 @@
-package route
+package technical
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 
 	"github.com/matthiashermsen/kaboom/api/response"
 )
 
-func GetPing(logger *slog.Logger) http.HandlerFunc {
+func HandleNotFound(logger *slog.Logger) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, request *http.Request) {
-		apiResponse := response.NewSuccessApiResponse("")
+		responseWriter.WriteHeader(http.StatusNotFound)
+
+		apiResponse := response.NewFailureApiResponse(response.NotFound, fmt.Sprintf("Could not find '%s'", request.URL.Path))
 		err := response.WriteJsonResponse(responseWriter, apiResponse)
 
 		if err != nil {

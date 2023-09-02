@@ -1,4 +1,4 @@
-package route
+package technical
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetAppVersion(suite *testing.T) {
+func TestHandleGetAppVersion(suite *testing.T) {
 	suite.Run("App version is available", func(testing *testing.T) {
 		appVersion := "1.0.0"
 		logger := slog.New(slog.Default().Handler())
@@ -20,7 +20,7 @@ func TestGetAppVersion(suite *testing.T) {
 		assert.NoError(testing, err, "Expected no error when constructing request")
 
 		responseRecorder := httptest.NewRecorder()
-		handler := GetAppVersion(appVersion, logger)
+		handler := HandleGetAppVersion(appVersion, logger)
 
 		handler(responseRecorder, request)
 
@@ -41,7 +41,7 @@ func TestGetAppVersion(suite *testing.T) {
 		assert.NoError(testing, err, "Expected no error when constructing request")
 
 		responseRecorder := httptest.NewRecorder()
-		handler := GetAppVersion(appVersion, logger)
+		handler := HandleGetAppVersion(appVersion, logger)
 
 		handler(responseRecorder, request)
 

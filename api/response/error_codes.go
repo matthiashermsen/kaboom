@@ -1,7 +1,8 @@
 package response
 
 const (
-	InternalError         string = "INTERNAL_ERROR"
 	AppVersionUnavailable string = "APP_VERSION_UNAVAILABLE"
+	ContentTypeInvalid    string = "CONTENT_TYPE_INVALID"
+	InternalError         string = "INTERNAL_ERROR"
 	NotFound              string = "NOT_FOUND"
 )
