@@ -1,4 +1,4 @@
-package route
+package technical
 
 import (
 	"fmt"
@@ -10,22 +10,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetPing(suite *testing.T) {
-	suite.Run("Ping", func(testing *testing.T) {
+func TestHandleFound(suite *testing.T) {
+	suite.Run("Respond with not found", func(testing *testing.T) {
 		logger := slog.New(slog.Default().Handler())
 
-		request, err := http.NewRequest("GET", "/", nil)
+		request, err := http.NewRequest("GET", "/made-up", nil)
 
 		assert.NoError(testing, err, "Expected no error when constructing request")
 
 		responseRecorder := httptest.NewRecorder()
-		handler := GetPing(logger)
+		handler := HandleNotFound(logger)
 
 		handler(responseRecorder, request)
 
-		assert.Equal(testing, http.StatusOK, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusOK, responseRecorder.Code))
+		assert.Equal(testing, http.StatusNotFound, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusNotFound, responseRecorder.Code))
 
-		expectedResponseBody := `{"status":"success","data":"","error":{"code":"","message":""}}`
+		expectedResponseBody := `{"status":"failure","data":null,"error":{"code":"NOT_FOUND","message":"Could not find '/made-up'"}}`
 		actualResponseBody := responseRecorder.Body.String()
 
 		assert.JSONEq(testing, expectedResponseBody, actualResponseBody, fmt.Sprintf("Expected response body '%s', but got '%s'", expectedResponseBody, actualResponseBody))

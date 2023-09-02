@@ -16,58 +16,80 @@ func TestGetApi(suite *testing.T) {
 
 		assert.NotNil(testing, router, "Expected a non-nil router")
 	})
-}
 
-func TestGetPing(suite *testing.T) {
-	suite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
-		router := GetApi("made-up", slog.New(slog.Default().Handler()))
-		request, err := http.NewRequest("GET", "/ping", nil)
+	suite.Run("Commands", func(commandSuite *testing.T) {
+		commandSuite.Run("ConfigureNewBoard", func(configureNewBoardSuite *testing.T) {
+			configureNewBoardSuite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
+				router := GetApi("made-up", slog.New(slog.Default().Handler()))
+				request, err := http.NewRequest("POST", "/command/configure-new-board", nil)
 
-		assert.NoError(testing, err, "Expected no error when constructing request")
+				assert.NoError(testing, err, "Expected no error when constructing request")
 
-		responseRecorder := httptest.NewRecorder()
+				responseRecorder := httptest.NewRecorder()
 
-		router.ServeHTTP(responseRecorder, request)
+				router.ServeHTTP(responseRecorder, request)
 
-		expectedContentType := "application/json"
-		actualContentType := responseRecorder.Header().Get("Content-Type")
+				expectedContentType := "application/json"
+				actualContentType := responseRecorder.Header().Get("Content-Type")
 
-		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+				assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+			})
+		})
 	})
-}
 
-func TestGetAppVersion(suite *testing.T) {
-	suite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
-		router := GetApi("made-up", slog.New(slog.Default().Handler()))
-		request, err := http.NewRequest("GET", "/app-version", nil)
+	suite.Run("Technical endpoints", func(technicalEndpointSuite *testing.T) {
+		technicalEndpointSuite.Run("GetPing", func(getPingSuite *testing.T) {
+			getPingSuite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
+				router := GetApi("made-up", slog.New(slog.Default().Handler()))
+				request, err := http.NewRequest("GET", "/ping", nil)
 
-		assert.NoError(testing, err, "Expected no error when constructing request")
+				assert.NoError(testing, err, "Expected no error when constructing request")
 
-		responseRecorder := httptest.NewRecorder()
+				responseRecorder := httptest.NewRecorder()
 
-		router.ServeHTTP(responseRecorder, request)
+				router.ServeHTTP(responseRecorder, request)
 
-		expectedContentType := "application/json"
-		actualContentType := responseRecorder.Header().Get("Content-Type")
+				expectedContentType := "application/json"
+				actualContentType := responseRecorder.Header().Get("Content-Type")
 
-		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
-	})
-}
+				assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+			})
+		})
 
-func TestRespondWithNotFound(suite *testing.T) {
-	suite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
-		router := GetApi("made-up", slog.New(slog.Default().Handler()))
-		request, err := http.NewRequest("GET", "/made-up", nil)
+		technicalEndpointSuite.Run("GetAppVersion", func(getAppVersionSuite *testing.T) {
+			getAppVersionSuite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
+				router := GetApi("made-up", slog.New(slog.Default().Handler()))
+				request, err := http.NewRequest("GET", "/app-version", nil)
 
-		assert.NoError(testing, err, "Expected no error when constructing request")
+				assert.NoError(testing, err, "Expected no error when constructing request")
 
-		responseRecorder := httptest.NewRecorder()
+				responseRecorder := httptest.NewRecorder()
 
-		router.ServeHTTP(responseRecorder, request)
+				router.ServeHTTP(responseRecorder, request)
 
-		expectedContentType := "application/json"
-		actualContentType := responseRecorder.Header().Get("Content-Type")
+				expectedContentType := "application/json"
+				actualContentType := responseRecorder.Header().Get("Content-Type")
 
-		assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+				assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+			})
+		})
+
+		technicalEndpointSuite.Run("RespondWithNotFound", func(respondWithNotFoundSuite *testing.T) {
+			respondWithNotFoundSuite.Run("Responds with Content-Type application/json", func(testing *testing.T) {
+				router := GetApi("made-up", slog.New(slog.Default().Handler()))
+				request, err := http.NewRequest("GET", "/made-up", nil)
+
+				assert.NoError(testing, err, "Expected no error when constructing request")
+
+				responseRecorder := httptest.NewRecorder()
+
+				router.ServeHTTP(responseRecorder, request)
+
+				expectedContentType := "application/json"
+				actualContentType := responseRecorder.Header().Get("Content-Type")
+
+				assert.Equal(testing, expectedContentType, actualContentType, fmt.Sprintf("Expected Content-Type '%s', but got '%s'", expectedContentType, actualContentType))
+			})
+		})
 	})
 }

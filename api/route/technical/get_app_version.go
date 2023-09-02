@@ -1,4 +1,4 @@
-package route
+package technical
 
 import (
 	"log/slog"
@@ -7,7 +7,7 @@ import (
 	"github.com/matthiashermsen/kaboom/api/response"
 )
 
-func GetAppVersion(appVersion string, logger *slog.Logger) http.HandlerFunc {
+func HandleGetAppVersion(appVersion string, logger *slog.Logger) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, request *http.Request) {
 		if appVersion == "" {
 			apiResponse := response.NewFailureApiResponse(response.AppVersionUnavailable, "The app version is unavailable.")

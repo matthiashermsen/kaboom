@@ -6,7 +6,8 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/matthiashermsen/kaboom/api/middleware"
-	"github.com/matthiashermsen/kaboom/api/route"
+	"github.com/matthiashermsen/kaboom/api/route/command"
+	"github.com/matthiashermsen/kaboom/api/route/technical"
 )
 
 func GetApi(appVersion string, logger *slog.Logger) *chi.Mux {
@@ -14,10 +15,16 @@ func GetApi(appVersion string, logger *slog.Logger) *chi.Mux {
 
 	apiRouter.Use(middleware.SetJsonContentType)
 
-	apiRouter.Get("/ping", route.GetPing(logger))
-	apiRouter.Get("/app-version", route.GetAppVersion(appVersion, logger))
+	apiRouter.Route("/command", func(commandRouter chi.Router) {
+		commandRouter.Use(middleware.RequireJsonContentType(logger))
 
-	apiRouter.NotFound(route.RespondWithNotFound(logger))
+		commandRouter.Post("/configure-new-board", command.HandleConfigureNewBoard(logger))
+	})
+
+	apiRouter.Get("/ping", technical.HandleGetPing(logger))
+	apiRouter.Get("/app-version", technical.HandleGetAppVersion(appVersion, logger))
+
+	apiRouter.NotFound(technical.HandleNotFound(logger))
 
 	return apiRouter
 }
