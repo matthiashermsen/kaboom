@@ -1,26 +1,29 @@
-package response
+package response_test
 
 import (
 	"bytes"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/matthiashermsen/kaboom/api/response"
 )
 
-func TestWriteJsonResponse(suite *testing.T) {
+func TestWriteJSONResponse(suite *testing.T) {
 	suite.Run("Success", func(testing *testing.T) {
 		responseWriter := httptest.NewRecorder()
-		responseBody := NewSuccessApiResponse("made-up")
+		responseBody := response.NewSuccessAPIResponse("made-up")
 
-		err := WriteJsonResponse(responseWriter, responseBody)
+		err := response.WriteJSONResponse(responseWriter, responseBody, slog.New(slog.Default().Handler()))
 
 		assert.Nil(testing, err, fmt.Sprintf("Expected error to be nil but got '%v'", err))
 
-		expectedResponseBody := `{"status":"success","data":"made-up","error":{"code":"","message":""}}`
+		expectedResponseBody := `{"status":"success","data":"made-up","error":null}`
 		actualResponseBodyAsString := responseWriter.Body.String()
 
 		assert.Equal(testing, expectedResponseBody, actualResponseBodyAsString, fmt.Sprintf("Expected response body '%s', but got '%s'", expectedResponseBody, actualResponseBodyAsString))
@@ -28,18 +31,18 @@ func TestWriteJsonResponse(suite *testing.T) {
 
 	suite.Run("Marshalling failed", func(testing *testing.T) {
 		responseWriter := httptest.NewRecorder()
-		responseBody := NewSuccessApiResponse(make(chan int))
+		responseBody := response.NewSuccessAPIResponse(make(chan int))
 
-		err := WriteJsonResponse(responseWriter, responseBody)
+		err := response.WriteJSONResponse(responseWriter, responseBody, slog.New(slog.Default().Handler()))
 
 		assert.NotNil(testing, err, "Expected error not to be nil")
 	})
 
 	suite.Run("Write failed", func(testing *testing.T) {
 		responseWriter := errorMockResponseWriter{}
-		responseBody := NewSuccessApiResponse("made-up")
+		responseBody := response.NewSuccessAPIResponse("made-up")
 
-		err := WriteJsonResponse(&responseWriter, responseBody)
+		err := response.WriteJSONResponse(&responseWriter, responseBody, slog.New(slog.Default().Handler()))
 
 		assert.NotNil(testing, err, "Expected error not to be nil")
 	})

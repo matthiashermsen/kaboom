@@ -1,4 +1,4 @@
-package technical
+package notfound_test
 
 import (
 	"fmt"
@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/matthiashermsen/kaboom/api/route/technical/notfound"
 )
 
 func TestHandleFound(suite *testing.T) {
@@ -19,7 +21,7 @@ func TestHandleFound(suite *testing.T) {
 		assert.NoError(testing, err, "Expected no error when constructing request")
 
 		responseRecorder := httptest.NewRecorder()
-		handler := HandleNotFound(logger)
+		handler := notfound.Handle(logger)
 
 		handler(responseRecorder, request)
 
