@@ -2,10 +2,11 @@ package response
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 )
 
-func WriteJsonResponse[T any](responseWriter http.ResponseWriter, responseBody ApiResponse[T]) error {
+func WriteJSONResponse[T any](responseWriter http.ResponseWriter, responseBody APIResponse[T], logger *slog.Logger) error {
 	encodedResponseBody, err := json.Marshal(responseBody)
 
 	if err != nil {
@@ -13,6 +14,21 @@ func WriteJsonResponse[T any](responseWriter http.ResponseWriter, responseBody A
 	}
 
 	_, err = responseWriter.Write(encodedResponseBody)
+
+	if err == nil {
+		return nil
+	}
+
+	logger.Error("Unable to write response", err)
+
+	errorResponseBody := NewErrorAPIResponse()
+	encodedErrorResponseBody, err := json.Marshal(errorResponseBody)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = responseWriter.Write(encodedErrorResponseBody)
 
 	return err
 }

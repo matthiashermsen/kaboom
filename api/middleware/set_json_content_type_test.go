@@ -1,4 +1,4 @@
-package middleware
+package middleware_test
 
 import (
 	"fmt"
@@ -7,14 +7,16 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/matthiashermsen/kaboom/api/middleware"
 )
 
-func TestSetJsonContentType(testing *testing.T) {
+func TestSetJSONContentType(testing *testing.T) {
 	handler := http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
 		responseWriter.WriteHeader(http.StatusOK)
 	})
 
-	middlewareHandler := SetJsonContentType(handler)
+	middlewareHandler := middleware.SetJSONContentType(handler)
 
 	request := httptest.NewRequest("GET", "/", nil)
 	responseWriter := httptest.NewRecorder()

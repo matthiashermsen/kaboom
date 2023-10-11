@@ -1,4 +1,4 @@
-package logging
+package logging_test
 
 import (
 	"fmt"
@@ -7,7 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/matthiashermsen/kaboom/logging/configuration"
+	loggingConfiguration "github.com/matthiashermsen/kaboom/environment/logging"
+	"github.com/matthiashermsen/kaboom/logging"
 )
 
 func TestGetLogger(suite *testing.T) {
@@ -20,11 +21,11 @@ func TestGetLogger(suite *testing.T) {
 
 	for _, expectedLogLevel := range logLevels {
 		suite.Run(fmt.Sprintf("Log level=%s", expectedLogLevel), func(testing *testing.T) {
-			configuration := configuration.Configuration{
+			configuration := loggingConfiguration.LoggingConfiguration{
 				Level: expectedLogLevel,
 			}
 
-			logger := GetLogger(configuration)
+			logger := logging.GetLogger(configuration)
 
 			assert.NotNil(testing, logger, "Expected logger not to be nil")
 		})

@@ -8,7 +8,7 @@ import (
 	"github.com/matthiashermsen/kaboom/api/response"
 )
 
-func RequireJsonContentType(logger *slog.Logger) func(http.Handler) http.Handler {
+func RequireJSONContentType(logger *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
 			contentTypeKey := "Content-Type"
@@ -19,12 +19,8 @@ func RequireJsonContentType(logger *slog.Logger) func(http.Handler) http.Handler
 			if actualContentType != jsonContentType {
 				responseWriter.WriteHeader(http.StatusUnsupportedMediaType)
 
-				apiResponse := response.NewFailureApiResponse(response.ContentTypeInvalid, fmt.Sprintf("Expected '%s' to be '%s' but got '%s'", contentTypeKey, jsonContentType, actualContentType))
-				err := response.WriteJsonResponse(responseWriter, apiResponse)
-
-				if err != nil {
-					response.HandleJsonResponseWriteError(responseWriter, err, logger)
-				}
+				apiResponse := response.NewFailureAPIResponse(response.ContentTypeInvalid, fmt.Sprintf("Expected '%s' to be '%s' but got '%s'", contentTypeKey, jsonContentType, actualContentType))
+				response.WriteJSONResponse(responseWriter, apiResponse, logger)
 
 				return
 			}

@@ -1,4 +1,4 @@
-package middleware
+package middleware_test
 
 import (
 	"fmt"
@@ -8,16 +8,18 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/matthiashermsen/kaboom/api/middleware"
 )
 
-func TestRequireJsonContentType(suite *testing.T) {
+func TestRequireJSONContentType(suite *testing.T) {
 	handler := http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
 		responseWriter.WriteHeader(http.StatusOK)
 	})
 
 	logger := slog.New(slog.Default().Handler())
 
-	middleware := RequireJsonContentType(logger)
+	middleware := middleware.RequireJSONContentType(logger)
 
 	suite.Run("'Content-Type' is 'application/json'", func(testing *testing.T) {
 		request, err := http.NewRequest("GET", "/made-up", nil)
@@ -33,12 +35,12 @@ func TestRequireJsonContentType(suite *testing.T) {
 		assert.Equal(testing, http.StatusOK, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusOK, responseRecorder.Code))
 	})
 
-	suite.Run("'Content-Type' is not 'text/html'", func(testing *testing.T) {
+	suite.Run("'Content-Type' is not 'application/json'", func(testing *testing.T) {
 		request, err := http.NewRequest("GET", "/made-up", nil)
 
 		assert.NoError(testing, err, "Expected no error when constructing request")
 
-		request.Header.Set("Content-Type", "text/html")
+		request.Header.Set("Content-Type", "made-up")
 
 		responseRecorder := httptest.NewRecorder()
 
@@ -46,7 +48,7 @@ func TestRequireJsonContentType(suite *testing.T) {
 
 		assert.Equal(testing, http.StatusUnsupportedMediaType, responseRecorder.Code, fmt.Sprintf("Expected status code %d but got %d", http.StatusUnsupportedMediaType, responseRecorder.Code))
 
-		expectedResponseBody := `{"status":"failure","data":null,"error":{"code":"CONTENT_TYPE_INVALID","message":"Expected 'Content-Type' to be 'application/json' but got 'text/html'"}}`
+		expectedResponseBody := `{"status":"failure","data":null,"error":{"code":"CONTENT_TYPE_INVALID","message":"Expected 'Content-Type' to be 'application/json' but got 'made-up'"}}`
 		actualResponseBodyAsString := responseRecorder.Body.String()
 
 		assert.Equal(testing, expectedResponseBody, actualResponseBodyAsString, fmt.Sprintf("Expected response body '%s', but got '%s'", expectedResponseBody, actualResponseBodyAsString))
