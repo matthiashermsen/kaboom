@@ -19,7 +19,7 @@ func GetAPI(appVersion string, logger *slog.Logger) *chi.Mux {
 	apiRouter.Route("/command", func(commandRouter chi.Router) {
 		commandRouter.Use(middleware.RequireJSONContentType(logger))
 
-		// commandRouter.Post("/start-new-game", command.HandleStartNewGame(logger))
+		// TODO
 	})
 
 	apiRouter.Get("/ping", ping.Handle(logger))
