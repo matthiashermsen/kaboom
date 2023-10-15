@@ -12,7 +12,7 @@ import (
 	"github.com/matthiashermsen/kaboom/api/route/technical/notfound"
 )
 
-func TestHandleFound(suite *testing.T) {
+func TestHandle(suite *testing.T) {
 	suite.Run("Respond with not found", func(testing *testing.T) {
 		logger := slog.New(slog.Default().Handler())
 

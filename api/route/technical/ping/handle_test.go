@@ -12,7 +12,7 @@ import (
 	"github.com/matthiashermsen/kaboom/api/route/technical/ping"
 )
 
-func TestHandleGetPing(suite *testing.T) {
+func TestHandle(suite *testing.T) {
 	suite.Run("Ping", func(testing *testing.T) {
 		logger := slog.New(slog.Default().Handler())
 

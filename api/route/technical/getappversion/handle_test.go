@@ -12,7 +12,7 @@ import (
 	"github.com/matthiashermsen/kaboom/api/route/technical/getappversion"
 )
 
-func TestHandleGetAppVersion(suite *testing.T) {
+func TestHandle(suite *testing.T) {
 	suite.Run("App version is available", func(testing *testing.T) {
 		appVersion := "1.0.0"
 		logger := slog.New(slog.Default().Handler())
