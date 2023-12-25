@@ -3,7 +3,7 @@ module github.com/matthiashermsen/kaboom
 go 1.21
 
 require (
-	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
