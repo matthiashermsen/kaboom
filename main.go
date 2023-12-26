@@ -10,6 +10,7 @@ import (
 	"github.com/matthiashermsen/kaboom/appversion"
 	"github.com/matthiashermsen/kaboom/environment"
 	"github.com/matthiashermsen/kaboom/logging"
+	"github.com/matthiashermsen/kaboom/storage/inmemory"
 )
 
 func main() {
@@ -21,7 +22,9 @@ func main() {
 
 	logger := logging.GetLogger(configuration.Logging)
 
-	apiRouter := api.GetAPI(appversion.AppVersion, logger)
+	store := inmemory.New()
+
+	apiRouter := api.GetAPI(store, logger, appversion.AppVersion)
 
 	logger.Info(fmt.Sprintf("Starting server on port %v", configuration.API.Port))
 

@@ -6,12 +6,14 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/matthiashermsen/kaboom/api/middleware"
+	"github.com/matthiashermsen/kaboom/api/route/command/startnewgame"
 	"github.com/matthiashermsen/kaboom/api/route/technical/getappversion"
 	"github.com/matthiashermsen/kaboom/api/route/technical/notfound"
 	"github.com/matthiashermsen/kaboom/api/route/technical/ping"
+	"github.com/matthiashermsen/kaboom/storage"
 )
 
-func GetAPI(appVersion string, logger *slog.Logger) *chi.Mux {
+func GetAPI(store storage.Store, logger *slog.Logger, appVersion string) *chi.Mux {
 	apiRouter := chi.NewRouter()
 
 	apiRouter.Use(middleware.SetJSONContentType)
@@ -19,7 +21,7 @@ func GetAPI(appVersion string, logger *slog.Logger) *chi.Mux {
 	apiRouter.Route("/command", func(commandRouter chi.Router) {
 		commandRouter.Use(middleware.RequireJSONContentType(logger))
 
-		// TODO
+		commandRouter.Post("/start-new-game", startnewgame.Handle(store, logger))
 	})
 
 	apiRouter.Get("/ping", ping.Handle(logger))
